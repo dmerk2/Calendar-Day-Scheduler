@@ -2,15 +2,15 @@ const calendar = $('#calendar');
 
 for (let i = 1; i <= 24; i++) {
   console.log(i)
-
-$("#calander").text('beforeend', `<div class = 'i'>${i}</div>`)  
 } 
 
 let currentDay = moment().format('dddd, MMMM Do YYYY'); 
 $("#currentDay").text(currentDay)
 
-let time = moment().startOf('date').fromNow();
+let startTime = moment().startOf('date').fromNow();
 $("#hour").text(time)
+
+let 
 
 // const store = window.localStorage;
 
