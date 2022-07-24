@@ -1,59 +1,43 @@
+//   let newTaskAdded = JSON.parse(localStorage.newTaskAdded);
+//   newTaskAdded = JSON.stringify(localStorage.newTaskAdded)
+//   // Store information into local storage
+//   localStorage.setItem('newTask', newTaskAdded);
+//   localStorage.getItem('newTask', newTaskAdded);
+
+
 // Get the current day and date from Moment.js
 let currentDay = moment().format('dddd, MMMM Do YYYY');
 $("#currentDay").text(currentDay)
 
 // Take users input inside of the textarea and append it into textarea
 let newTask = $('textarea');
-$('textarea').text(newTask)
+let dataID = $('textarea').attr("data-id")
 
-let newTaskAdded = function inputNewTask (event) {
-  event.preventDefualt();
-  console.log('clcfgadick')
-  // userInput = event.concat('textarea', taskInput)
-  task.addClass('taskAdded', event);
-  task.appendTo(textarea);
+// When the save button is clicked....
+$('.btn').on("click", function (event) {
+  event.preventDefault();
+
+  textarea.attr('class', 'future');
+
+  dataID = $(this).attr('data-id');
+
+});
+
+let past = moment().startOf('hour').fromNow();
+let present = moment().startOf();
+let future = moment().endOf('hour').fromNow();
+let textarea = $('textarea')
+
+// Determine what time of day it is 
+function timeOfDay() {
+
+  if (present) {
+    textarea.attr('class', 'present')
+  } else if (present > past) {
+    textarea.attr('class', 'past')
+  } else if (present < future) {
+    textarea.attr('class', 'future')
+  }
 };
 
-$('btn').click('submit', newTaskAdded, console.log('click'))
-
-let past = moment().startOf('hour').fromNow(); 
-let present = moment().fromNow();
-let future = moment().endOf('hour').fromNow(); 
-
-function timeOfDay() {
-  if (present) {
-    console.log('present')
-  } else if (present === past) {
-    console.log('current time')
-  } else if (present === future) {
-    console.log('future')
-  }
-}
-
-timeOfDay()
-
-// var printSkills = function (name, date) {
-//   var listEl = $('<li>');
-//   var listDetail = name.concat(' on ', date);
-//   listEl.addClass('list-group-item').text(listDetail);
-//   listEl.appendTo(skillsListEl);
-// };
-
-// var handleFormSubmit = function (event) {
-//   event.preventDefault();
-
-//   var nameInput = nameInputEl.val();
-//   var dateInput = dateInputEl.val();
-
-//   if (!nameInput || !dateInput) {
-//     console.log('You need to fill out the form!');
-//     return;
-//   }
-
-//   printSkills(nameInput, dateInput);
-
-//   // resets form
-//   nameInputEl.val('');
-//   dateInputEl.val('');
-// };
-// formEl.on('submit', handleFormSubmit);
+timeOfDay() 
