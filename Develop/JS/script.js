@@ -1,10 +1,3 @@
-//   let newTaskAdded = JSON.parse(localStorage.newTaskAdded);
-//   newTaskAdded = JSON.stringify(localStorage.newTaskAdded)
-//   // Store information into local storage
-//   localStorage.setItem('newTask', newTaskAdded);
-//   localStorage.getItem('newTask', newTaskAdded);
-
-
 // Get the current day and date from Moment.js
 let currentDay = moment().format('dddd, MMMM Do YYYY');
 $("#currentDay").text(currentDay)
@@ -12,15 +5,14 @@ $("#currentDay").text(currentDay)
 // Take users input inside of the textarea and append it into textarea
 let newTask = $('textarea');
 let dataID = $('textarea').attr("data-id")
+let task = localStorage.getItem("task");
 
-// When the save button is clicked....
-$('.btn').on("click", function (event) {
-  event.preventDefault();
+// When the save button is clicked the users input will be saved to local storage
+$('.btn').on("click", function () {
+  localStorage.setItem("task", task);
 
-  textarea.attr('class', 'future');
-
-  dataID = $(this).attr('data-id');
-
+  // dataID = $(this).attr('data-id');
+  // console.log(dataID)
 });
 
 let past = moment().startOf('hour').fromNow();
@@ -28,9 +20,9 @@ let present = moment().startOf();
 let future = moment().endOf('hour').fromNow();
 let textarea = $('textarea')
 
-// Determine what time of day it is 
+// Depending on what time of the day it is determines what class will
+// be applied to the textarea
 function timeOfDay() {
-
   if (present) {
     textarea.attr('class', 'present')
   } else if (present > past) {
@@ -40,4 +32,7 @@ function timeOfDay() {
   }
 };
 
-timeOfDay() 
+timeOfDay()
+
+
+
