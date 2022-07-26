@@ -1,6 +1,7 @@
 // // Get the current day and date from Moment.js
 let currentDay = moment().format('dddd, MMMM Do');
 $("#currentDay").text("Today is " + currentDay)
+
 $(document).ready(function () {
 
   $("textarea").each(function (i) {
@@ -10,7 +11,7 @@ $(document).ready(function () {
   checkTime();
 
   // code to store tasks in localStorage
-  $("button").on("click", function (event) {
+  $("button").on("click", function () {
     var currentTimeSlot = $(this).attr("index");
     var currentTextarea = $("#" + currentTimeSlot).val();
 
@@ -35,7 +36,7 @@ function checkTime() {
     $("#todaysDate").text(formattedDate);
 
     // disables the textarea input for past hours
-    $("textarea").each(function (i) {
+    $("textarea").each(function () {
       var timeSlot = $(this).attr("id");
       if (currentHour > timeSlot) {
         $(this).prop('disabled', true);
