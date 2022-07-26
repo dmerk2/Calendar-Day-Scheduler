@@ -1,131 +1,82 @@
-// Get the current day and date from Moment.js
-let currentDay = moment().format('dddd, MMMM Do YYYY');
-$("#currentDay").text(currentDay)
+// // Get the current day and date from Moment.js
+let currentDay = moment().format('dddd, MMMM Do');
+$("#currentDay").text("Today is " + currentDay)
+$(document).ready(function () {
 
-// Take users input inside of the input and append it into input
-let newTask = $('input');
-let dataID = $('input').attr("data-id")
-let taskAdded= [];
+  $("textarea").each(function (i) {
+    $(this).addClass("future");
+  });
 
-  // Bind the click event to the function
-  $(".btn").click(function (event) {
-    event.preventDefault();
-      
-    // Select all the elements with the type of text
-    $("input[type=text]")
-        .each(function () {
-        localStorage.setItem("taskAdded", JSON.parse(taskAdded));
-      // Print the value currently in the input box
-      input.innerHTML = this.value;
-      console.log(this.value);
+  checkTime();
+
+  // code to store tasks in localStorage
+  $("button").on("click", function (event) {
+    var currentTimeSlot = $(this).attr("index");
+    var currentTextarea = $("#" + currentTimeSlot).val();
+
+    if (!currentTextarea) {
+      $(this).find("i").attr("class", "far fa-save");
+    } else {
+      $(this).find("i").attr("class", "fas fa-save");
+      // saves to the storage if the user presses the save button
+      saveToLocalStorage(currentTimeSlot, currentTextarea); 
+    };
+  });
+
+});
+
+// checks the time every second to be able to disable the inputs without refreshing the page
+function checkTime() { 
+  setInterval(function () {
+    var now = moment();
+    var formattedDate = now.format("dddd[,] MMMM Do gggg");
+    var currentHour = now.format("HH"); 
+
+    $("#todaysDate").text(formattedDate);
+
+    // disables the textarea input for past hours
+    $("textarea").each(function (i) {
+      var timeSlot = $(this).attr("id");
+      if (currentHour > timeSlot) {
+        $(this).prop('disabled', true);
+      } else if (currentHour == timeSlot) {
+        $(this).removeClass("future");
+        $(this).addClass("present");
+      } else {
+        $(this).addClass("future");
+      };
     });
-  })
 
-  //Store task into local storage
-  function init(){
-    taskAdded = localStorage.getItem("taskAdded", JSON.stringify(taskAdded)); 
-  }
-
-// Using moment.js determines what time variables represent
-let past = moment().subtract(1, 'hour').calendar();
-let present = moment().calendar();
-let future = moment().add(1, 'hour').calendar();
-let input = $('input[type=text]')
-
-// Depending on what time of the day it is determines what class will
-// be applied to the textarea
-function timeOfDay() {
-  if (present) {
-    input.attr('class', 'present')
-  } else if (present > past) {
-    input.attr('class', 'past')
-  } else if (present < future) {
-    input.attr('class', 'future')
-  }
+    // disables the button for past hours
+    $("button").each(function (i) {
+      var currentBtn = $(this).attr("index");
+      if (currentHour > currentBtn) {
+        $(this).prop('disabled', true);
+      };
+    });
+  }, 1000);
 };
 
-console.log(present, past, future)
-timeOfDay()
-init()
+// checks for values in local storage and displays them on the page
+$(window).on("load", function () {
+  var timeSlots = ["09", "10", "11", "12", "13", "14", "15", "16", "17"];
+  getFromLocalStorage(timeSlots);
+});
 
+function saveToLocalStorage(cts, cta) {
+  if (cta !== '') {
+    localStorage.setItem(cts, cta);
+  };
+};
 
-// // The following function renders items in a todo list as <li> elements
-// function renderTasks() {
-//   // Clear todoList element and update todoCountSpan
-//   input.innerHTML = "";
-//   input.textContent = taskAdded.length;
-
-//   // Render a new li for each todo
-//   for (var i = 0; i < taskAdded.length; i++) {
-//     var taskAdded = taskStored[i];
-
-//     // var li = document.createElement("li");
-//     textarea.textContent = taskAdded;
-//     textarea.setAttribute("data-index", i);
-
-//     // var button = document.createElement("button");
-//     // button.textContent = "Complete ✔️";
-
-//     // textarea.appendChild(textarea);
-//     console.log(i)
-    
-//   }
-// }
-// renderTasks()
-// // This function is being called below and will run when the page loads.
-// function init() {
-//   // Get stored todos from localStorage
-//   var storedTodos = JSON.parse(localStorage.getItem("todos"));
-
-//   // If todos were retrieved from localStorage, update the todos array to it
-//   if (storedTodos !== null) {
-//     todos = storedTodos;
-//   }
-
-//   // This is a helper function that will render todos to the DOM
-//   renderTodos();
-// }
-
-// function storeTodos() {
-//   // Stringify and set key in localStorage to todos array
-//   localStorage.setItem("todos", JSON.stringify(todos));
-// }
-
-// // Add submit event to form
-// todoForm.addEventListener("submit", function(event) {
-//   event.preventDefault();
-
-//   var todoText = todoInput.value.trim();
-
-//   // Return from function early if submitted todoText is blank
-//   if (todoText === "") {
-//     return;
-//   }
-
-//   // Add new todoText to todos array, clear the input
-//   todos.push(todoText);
-//   todoInput.value = "";
-
-//   // Store updated todos in localStorage, re-render the list
-//   storeTodos();
-//   renderTodos();
-// });
-
-// // Add click event to todoList element
-// todoList.addEventListener("click", function(event) {
-//   var element = event.target;
-
-//   // Checks if element is a button
-//   if (element.matches("button") === true) {
-//     // Get its data-index value and remove the todo element from the list
-//     var index = element.parentElement.getAttribute("data-index");
-//     todos.splice(index, 1);
-
-//     // Store updated todos in localStorage, re-render the list
-//     storeTodos();
-//     renderTodos();
-//   }
-// });
-
-// // Calls init to retrieve data and render it to the page on load
-// init()
+function getFromLocalStorage(event) {
+  if (localStorage) {
+    for (var i = 0; i < event.length; i++) {
+      var taskKey = event[i];
+      var task = localStorage.getItem(taskKey);
+      if (task) {
+        $("#" + taskKey).val(task);
+      }
+    };
+  };
+};
