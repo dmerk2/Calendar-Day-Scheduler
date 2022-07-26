@@ -40,12 +40,12 @@ textarea {
 
 .present {
   background-color: red;
-  color: #536195;
+  color: white;
 }
 
 .future {
   background-color: green;
-  color: #536195;
+  color: white;
 }
 
 .input-group-text {
@@ -56,8 +56,4 @@ textarea {
 
 .form-control { 
   border: 1px solid #a1b7e4;
-}
-
-.quote {
-  color: #C9DFF2;
 }
